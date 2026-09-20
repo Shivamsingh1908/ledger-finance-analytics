@@ -1,0 +1,6 @@
+date,description,amount,type,category
+2026-09-01,Monthly salary,4200.00,Income,Salary
+2026-09-02,Weekly groceries,84.50,Expense,Food & drink
+2026-09-03,Train ticket,12.00,Expense,Transport
+2026-09-02,Weekly groceries,84.50,Expense,Food & drink
+invalid-date,Invalid example,10.00,Expense,Other

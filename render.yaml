@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: ledger-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Key
+        sync: false
+      - key: Jwt__Issuer
+        value: FinanceAnalyticsApi
+      - key: Jwt__Audience
+        value: FinanceAnalyticsClient
+      - key: Cors__AllowedOrigins
+        sync: false
+      - key: Scheduler__Secret
+        sync: false
+      - key: Resend__ApiKey
+        sync: false
+      - key: Resend__From
+        sync: false

@@ -1,0 +1,7 @@
+**/bin/
+**/obj/
+**/*.db
+**/*.log
+.env
+.env.*
+!.env.example
