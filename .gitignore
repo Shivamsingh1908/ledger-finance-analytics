@@ -16,3 +16,5 @@
 **/*.log
 .vs/
 .local/
+.neon
+node_modules/
