@@ -1,4 +1,150 @@
-# Ledger: Finance Analytics
+# Ledger
+
+### Personal finance, thoughtfully organized.
+
+Ledger is a full-stack personal finance workspace for tracking accounts, transactions, budgets, recurring payments, and CSV imports in one calm, focused interface.
+
+**Live app:** [ledger-finance-analytics.vercel.app](https://ledger-finance-analytics.vercel.app)<br>
+**API:** [ledger-api-m7qb.onrender.com](https://ledger-api-m7qb.onrender.com) | [Swagger UI](https://ledger-api-m7qb.onrender.com/swagger/index.html) | [Health](https://ledger-api-m7qb.onrender.com/health)
+
+> Create a new account to explore the live app. No demo credentials or shared user data are seeded.
+
+![Ledger dashboard](docs/screenshots/showcase-dashboard.png)
+
+## What It Does
+
+- **Financial dashboard** with income, expenses, net cash flow, savings rate, trends, and spending breakdowns
+- **Account management** with balances, currencies, categories, and safe deletion rules
+- **Transaction workflows** with filtering, sorting, pagination, search, CSV export, and duplicate detection
+- **Budgets** with monthly limits, live spend tracking, progress indicators, and overspending states
+- **Recurring transactions** with daily, weekly, monthly, and yearly schedules
+- **CSV imports** with preview, validation, duplicate detection, idempotent confirmation, and import history
+- **Secure authentication** with password hashing, JWT access tokens, rotating refresh sessions, HttpOnly cookies, rate limiting, and origin validation
+
+## Product Tour
+
+| Dashboard | Transactions |
+|:---:|:---:|
+| ![Dashboard](docs/screenshots/showcase-dashboard.png) | ![Transactions](docs/screenshots/showcase-transactions.png) |
+
+| Accounts | Mobile experience |
+|:---:|:---:|
+| ![Accounts](docs/screenshots/showcase-accounts.png) | ![Mobile dashboard](docs/screenshots/showcase-mobile-dashboard.png) |
+
+| Sign in | Import and review |
+|:---:|:---:|
+| ![Sign in](docs/screenshots/login-desktop.png) | ![Import workflow](docs/screenshots/feature-transactions.png) |
+
+## Engineering Highlights
+
+- Layered ASP.NET Core architecture separating API, application rules, domain entities, infrastructure, and tests
+- EF Core migrations for PostgreSQL in production and isolated SQLite databases for local development and tests
+- User-scoped EF query filters and composite foreign keys to prevent cross-user data access
+- Integer minor-unit storage for reliable monetary calculations
+- Idempotent recurring-payment processing safe for scheduled retries
+- Same-origin Vercel API rewrites so refresh cookies remain first-party
+- Docker multi-stage build deployed to Render with automatic production migrations
+- GitHub Actions for backend/frontend CI and scheduled recurring-payment processing
+
+## Technology
+
+| Area | Stack |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, Fluent UI, TanStack Query, React Hook Form, Zod, Chart.js |
+| Backend | ASP.NET Core 10, C#, REST APIs, Swagger, Serilog |
+| Data | EF Core, PostgreSQL via Npgsql, SQLite for local development and tests |
+| Security | JWT, password hashing, HttpOnly refresh cookies, CORS, rate limiting |
+| Delivery | Docker, Render, Vercel, Neon, GitHub Actions |
+
+## Run Locally
+
+### Requirements
+
+- .NET 10 SDK
+- Node.js 24 LTS
+
+From the repository root:
+
+```powershell
+dotnet restore FinanceAnalytics.sln
+npm --prefix frontend ci
+```
+
+Start the API in one terminal:
+
+```powershell
+dotnet run --project backend/Finance.Api -- --environment Development --urls http://localhost:5080
+```
+
+Start the frontend in another:
+
+```powershell
+npm --prefix frontend run dev
+```
+
+Open [localhost:5173](http://localhost:5173). The Vite proxy forwards `/api` and `/health` to the API. Local development creates `backend/Finance.Api/finance.db` automatically; it is ignored by Git.
+
+## Verify
+
+```powershell
+dotnet test FinanceAnalytics.sln
+npm --prefix frontend run lint
+npm --prefix frontend test
+npm --prefix frontend run build
+```
+
+The backend test suite uses temporary SQLite databases and covers authentication, ownership isolation, dashboard totals, validation, imports, budgets, and recurring-payment idempotency. Frontend tests cover authentication and form validation.
+
+## Deployment
+
+The production topology is:
+
+```text
+Vercel (React SPA) -> Render (ASP.NET Core API) -> Neon (PostgreSQL)
+                                                                            ^
+                                                            GitHub Actions scheduler
+```
+
+Deployment configuration is checked in:
+
+- [backend/Dockerfile](backend/Dockerfile) - multi-stage .NET image
+- [render.yaml](render.yaml) - Render service definition
+- [frontend/vercel.json](frontend/vercel.json) - SPA fallback and same-origin API rewrite
+- [.github/workflows/ci.yml](.github/workflows/ci.yml) - build, lint, and test checks
+- [.github/workflows/recurring.yml](.github/workflows/recurring.yml) - hourly recurring-payment processing
+
+Production secrets belong in the hosting dashboards, never in Git:
+
+```text
+ASPNETCORE_ENVIRONMENT=Production
+ConnectionStrings__DefaultConnection=<Neon Npgsql connection string>
+Jwt__Key=<32+ random characters>
+Jwt__Issuer=FinanceAnalyticsApi
+Jwt__Audience=FinanceAnalyticsClient
+Cors__AllowedOrigins=https://<your-vercel-domain>
+Scheduler__Secret=<32+ random characters>
+```
+
+The repository includes [backend/.env.example](backend/.env.example) and [frontend/.env.example](frontend/.env.example) as safe templates. Never commit `.env.local`, database files, API keys, or passwords.
+
+## Repository Layout
+
+```text
+backend/
+    Finance.Api/             HTTP API and startup configuration
+    Finance.Application/     DTOs, interfaces, and business rules
+    Finance.Domain/          Domain entities
+    Finance.Infrastructure/ EF Core data access and services
+    Finance.Tests/           API and integration tests
+frontend/
+    src/                     React application and feature modules
+    e2e/                     Playwright browser tests
+docs/screenshots/          Product screenshots
+```
+
+## License
+
+This project is a portfolio application created for demonstration and learning.
 
 React/TypeScript personal finance workspace with an ASP.NET Core 10 API, EF Core, Fluent UI, TanStack Query, React Hook Form, Zod, and Chart.js. Local development uses SQLite; no cloud account or paid resource is required.
 
