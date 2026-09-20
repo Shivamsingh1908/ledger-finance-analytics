@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://ledger-api-m7qb.onrender.com/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://ledger-api-m7qb.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
