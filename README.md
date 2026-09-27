@@ -111,7 +111,7 @@ Deployment configuration is checked in:
 - [render.yaml](render.yaml) - Render service definition
 - [frontend/vercel.json](frontend/vercel.json) - SPA fallback and same-origin API rewrite
 - [.github/workflows/ci.yml](.github/workflows/ci.yml) - build, lint, and test checks
-- [.github/workflows/recurring.yml](.github/workflows/recurring.yml) - hourly recurring-payment processing
+- [.github/workflows/recurring.yml](.github/workflows/recurring.yml) - daily recurring-payment processing
 
 Production secrets belong in the hosting dashboards, never in Git:
 
