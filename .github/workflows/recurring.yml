@@ -13,15 +13,11 @@ jobs:
     steps:
       - name: Process due recurring transactions
         env:
-          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          API_BASE_URL: https://ledger-api-m7qb.onrender.com
           SCHEDULER_SECRET: ${{ secrets.SCHEDULER_SECRET }}
         run: |
           set -euo pipefail
 
-          if [[ -z "$API_BASE_URL" ]]; then
-            echo "::error::Repository secret API_BASE_URL is missing. Set it to the Render API base URL."
-            exit 1
-          fi
           if [[ -z "$SCHEDULER_SECRET" ]]; then
             echo "::error::Repository secret SCHEDULER_SECRET is missing. Set it to the same value as Render Scheduler__Secret."
             exit 1

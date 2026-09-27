@@ -283,7 +283,7 @@ The free-tier deployment uses **Neon PostgreSQL**, **Render**, **Vercel**, and *
 1. Create a free Neon database and copy its pooled connection details into this Npgsql format: `Host=...;Database=...;Username=...;Password=...;SSL Mode=Require;Trust Server Certificate=true`.
 2. Create a Render web service from the repository using `render.yaml`. Set the database, JWT, CORS, and scheduler variables from the Render dashboard. Production applies the checked-in EF migrations at startup.
 3. Create a Vercel project with `frontend` as the root directory. Replace `<RENDER_API_URL>` in `frontend/vercel.json` with the Render HTTPS hostname, leave `VITE_API_BASE_URL` empty, and set `Cors__AllowedOrigins` to the Vercel URL.
-4. Add the GitHub Actions repository secrets `API_BASE_URL` (the Render API URL) and `SCHEDULER_SECRET` (the same value as Render's `Scheduler__Secret`). The recurring workflow is hourly and can also be run manually.
+4. Add the GitHub Actions repository secret `SCHEDULER_SECRET` with the same value as Render's `Scheduler__Secret`. The recurring workflow calls the configured Render API once daily and can also be run manually.
 5. Validate `https://<render-host>/health`, `https://<render-host>/swagger`, then use the Vercel app for signup, adding a transaction, and checking the dashboard.
 
 The same-origin Vercel `/api` rewrite keeps refresh cookies first-party. Without it, browser third-party-cookie restrictions can prevent refresh sessions when the frontend and API use different sites. No demo credentials are seeded; use a new account during validation. Resolve the known mobile Transactions overflow before treating browser verification as complete.
